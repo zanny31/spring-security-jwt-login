@@ -1,4 +1,4 @@
-package com.zanny.auth.user;
+package com.zanny.auth.user.domain;
 
 import com.zanny.auth.common.BaseTimeEntity;
 
