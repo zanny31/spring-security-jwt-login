@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.zanny.auth.user.domain.User;
 import com.zanny.auth.user.domain.UserRole;
 import com.zanny.auth.user.repository.UserRepository;
+import com.zanny.auth.util.JwtUtil;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     @Transactional
     public Long signup(String username, String rawPassword) {
@@ -35,8 +37,16 @@ public class UserService {
         return userRepository.save(user).getId();
     }
 
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username)
+    public String findByUsername(String username, String rawPassword) {
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+
+        if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 틀렸습니다");
+        }
+
+        String token = jwtUtil.generateToken(username);
+
+        return token;
     }
 }

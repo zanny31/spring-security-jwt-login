@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.zanny.auth.user.domain.User;
 import com.zanny.auth.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -26,9 +25,8 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) {
-        User user = userService.findByUsername(username);
-        // TODO: Password 검증 및 JWT 발급 추가 예정
-        return ResponseEntity.ok("로그인 성공");
+        String token = userService.findByUsername(username, password);
+        return ResponseEntity.ok("Bearer " + token);
     }
 
 }
