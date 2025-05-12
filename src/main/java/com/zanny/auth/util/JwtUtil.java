@@ -37,7 +37,7 @@ public class JwtUtil {
             Jwts.parser()
                     .verifyWith(key)
                     .build()
-                    .parseEncryptedClaims(token);
+                    .parseSignedClaims(token);
             return true;
         } catch (Exception e) {
             return false;
